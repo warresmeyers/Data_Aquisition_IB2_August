@@ -8,12 +8,17 @@ TOPIC = "sensors/moisture"
 # --- Configurable threshold ---
 MOISTURE_THRESHOLD = 600   # trigger alert if moisture value exceeds this
 
+# Track whether we're currently above threshold, to avoid repeat alerts
+above_threshold = False
+
 def on_connect(client, userdata, flags, rc):
     print(f"Connected with result code {rc}")
     client.subscribe(TOPIC)
     print(f"Subscribed to {TOPIC}")
 
 def on_message(client, userdata, msg):
+    global above_threshold
+
     try:
         data = json.loads(msg.payload.decode())
     except json.JSONDecodeError:
@@ -21,12 +26,18 @@ def on_message(client, userdata, msg):
         return
 
     value = data.get("value")
-    print(f"Received: {data}")
 
-    if value is not None and value > MOISTURE_THRESHOLD:
-        print("\n" + "!" * 40)
-        print(f"!!! ALERT: moisture value {value} exceeds threshold {MOISTURE_THRESHOLD} !!!")
-        print("!" * 40 + "\n")
+    if value is None:
+        return
+
+    if value > MOISTURE_THRESHOLD:
+        if not above_threshold:
+            print("\n" + "!" * 40)
+            print(f"!!! ALERT: moisture value {value} exceeded threshold {MOISTURE_THRESHOLD} !!!")
+            print("!" * 40 + "\n")
+            above_threshold = True
+    else:
+        above_threshold = False
 
 client = mqtt.Client()
 client.on_connect = on_connect
