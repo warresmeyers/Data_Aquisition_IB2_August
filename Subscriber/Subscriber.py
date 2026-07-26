@@ -7,7 +7,7 @@ BROKER = "192.168.1.10"   # use the Pi's IP if running this on your PC instead
 PORT = 1883
 LOG_FILE = "sensor_log.txt"
 
-ALL_TOPICS = ["sensors/moisture", "sensors/temp_humidity"]
+ALL_TOPICS = ["sensors/moisture", "sensors/temp_humidity", "sensors/distance"]
 
 # Use topic from command-line argument, or subscribe to all if not given
 if len(sys.argv) > 1:
