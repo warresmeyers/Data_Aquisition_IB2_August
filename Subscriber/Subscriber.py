@@ -3,7 +3,7 @@ import time
 import json
 import paho.mqtt.client as mqtt
 
-BROKER = "localhost"   # use the Pi's IP if running this on your PC instead
+BROKER = "192.168.1.10"   # use the Pi's IP if running this on your PC instead
 PORT = 1883
 LOG_FILE = "sensor_log.txt"
 
